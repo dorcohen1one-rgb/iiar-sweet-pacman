@@ -6,6 +6,8 @@ iyar's real portrait appears inside the Pacman character and in soft circular fr
 
 A soft, repeating teddy bear illustration decorates the page and the maze background. It uses a small native SVG, scaled for phones, with no extra animation.
 
+The maze's moving characters are also teddy bears with round ears, little paws and colored bows. Collecting a power heart gives them heart eyes for the existing nine-second hug bonus.
+
 Collecting candy reveals short, heartfelt compliments at least six seconds apart. A longer personal note stays visible above the maze for at least nine seconds of playing time. Floating words linger for 3.6 seconds with a gentle fade.
 
 This repository contains the static website. No build step or dependencies are required.

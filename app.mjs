@@ -40,7 +40,7 @@ const heartMessages = [
   'גם אחרי שהמשחק נגמר, המילים הטובות כאן נשארות בשבילך.',
   'אייר, שתמיד יהיה לך מקום שבו אפשר פשוט להיות את.',
   'יש בך עדינות שהופכת את העולם לקצת יותר נעים.',
-  'אייר, אפילו הרוחות כאן קצת מתאהבות בחיוך שלך.',
+  'אייר, אפילו הדובונים כאן קצת מתאהבים בחיוך שלך.',
   'את לא צריכה לעשות משהו מיוחד כדי להיות חשובה, אייר.',
   'הלוואי שכל ביס קטן כאן יזכיר לך כמה טוב שאת בעולם.',
   'אייר, את ראויה ליום שירגיש כמו חיבוק.',
@@ -149,7 +149,7 @@ function togglePause() {
 function hideOverlay() { $('overlay').hidden = true; }
 function showState(state) {
   const settings = {
-    ready: ['משלוח מיוחד לאייר ♡', 'היי אייר, מוכנה לביס?', 'אספי ממתקים, גלי מילים מהלב,\nותני חיבוק קטן לרוחות.', 'יאללה, לשחק', 'בלי לחץ. רק עוד קצת מתוק.', 'start'],
+    ready: ['משלוח מיוחד לאייר ♡', 'היי אייר, מוכנה לביס?', 'אספי ממתקים, גלי מילים מהלב,\nותני חיבוק קטן לדובונים.', 'יאללה, לשחק', 'בלי לחץ. רק עוד קצת מתוק.', 'start'],
     paused: ['הפסקה מתוקה ☁', 'גם לממתקים מגיע רגע.', 'קחי נשימה, אייר.\nהעולם הקטן שלך מחכה לך בדיוק כאן.', 'ממשיכים לביס הבא', 'אפשר גם ללחוץ על מקש רווח.', 'resume'],
     levelup: ['עוד עולם בכיס שלך ✨', 'אייר, את עושה כאן קסמים!', `אספת את כל הממתקים.\n${WORLDS[game.level]?.name ?? ''} כבר מחכה לך.`, 'לעולם הבא', `בונוס לבבות: +${game.lives * 100} נקודות`, 'next'],
     over: ['כל ביס הוא התחלה ♡', 'עוד סיבוב קטן?', `אספת ${number.format(game.score)} נקודות של מתיקות.\nבפעם הבאה יש עוד ממתקים לגלות.`, 'יאללה, עוד פעם', 'השיא שלך נשמר בדפדפן הזה.', 'again'],
@@ -169,7 +169,7 @@ function syncMode() {
     const selected = button.dataset.mode === mode;
     button.classList.toggle('selected', selected); button.setAttribute('aria-pressed', String(selected));
   }
-  $('mode-note').textContent = mode === 'cozy' ? 'רוחות איטיות יותר, לב נוסף, בלי שעון.' : 'רוחות מהירות יותר, שלושה לבבות, בלי שעון.';
+  $('mode-note').textContent = mode === 'cozy' ? 'דובונים איטיים יותר, לב נוסף, בלי שעון.' : 'דובונים מהירים יותר, שלושה לבבות, בלי שעון.';
 }
 function updateHud() {
   saveBest();
@@ -256,7 +256,7 @@ function makeBoard() {
   const minX = Math.min(...houseCells.map(p => p.col)) * TILE, minY = Math.min(...houseCells.map(p => p.row)) * TILE;
   round(c, minX + 6, minY + 5, 5 * TILE - 12, 3 * TILE - 10, 15, '#eadfec70');
   c.textAlign = 'center'; c.fillStyle = '#b19abc'; c.font = '9px Arial';
-  c.fillText('THE CUDDLE CLUB', minX + 2.5 * TILE, minY + 20);
+  c.fillText('THE TEDDY CLUB', minX + 2.5 * TILE, minY + 20);
   heart(c, minX + 2.5 * TILE, minY + 76, 10, '#d9b4c9');
   cacheLevel = game.level;
 }
@@ -300,23 +300,54 @@ function drawPlayer() {
   ctx.beginPath(); ctx.arc(-5, -12, 2.7, 0, Math.PI * 2); ctx.fillStyle = '#f8cfdd'; ctx.fill(); ctx.stroke();
   ctx.restore();
 }
-function drawGhost(g) {
-  const scared = game.elapsed < game.powerUntil && game.elapsed >= g.releaseAt;
-  const bob = reducedMotion ? 0 : Math.sin(paintTime * .004 + g.index * 2) * 1.3;
-  ctx.save(); ctx.translate(g.x * TILE, g.y * TILE + bob);
-  const fill = scared ? '#dbb5dc' : g.color;
-  ctx.beginPath(); ctx.moveTo(-12, 11); ctx.lineTo(-12, -1); ctx.bezierCurveTo(-12, -18, 12, -18, 12, -1);
-  ctx.lineTo(12, 11); ctx.quadraticCurveTo(8, 4, 4, 11); ctx.quadraticCurveTo(0, 4, -4, 11);
-  ctx.quadraticCurveTo(-8, 4, -12, 11); ctx.closePath();
-  ctx.fillStyle = fill; ctx.fill(); ctx.strokeStyle = '#8f719f60'; ctx.lineWidth = 1; ctx.stroke();
-  ctx.beginPath(); ctx.ellipse(-8, 3, 2.6, 1.5, 0, 0, 2 * Math.PI); ctx.ellipse(8, 3, 2.6, 1.5, 0, 0, 2 * Math.PI); ctx.fillStyle = '#ec92ac88'; ctx.fill();
-  if (scared) { heart(ctx, -4.5, -3, 4.5, '#92658d'); heart(ctx, 4.5, -3, 4.5, '#92658d'); }
-  else {
-    ctx.fillStyle = '#fffdf6'; ctx.beginPath(); ctx.ellipse(-4, -3, 3.6, 4.3, 0, 0, 2 * Math.PI); ctx.ellipse(4, -3, 3.6, 4.3, 0, 0, 2 * Math.PI); ctx.fill();
-    const offset = { left: [-1.1, 0], right: [1.1, 0], up: [0, -1.1], down: [0, 1.1], none: [0, 0] }[g.dir];
-    ctx.fillStyle = '#645071'; ctx.beginPath(); ctx.arc(-4 + offset[0], -3 + offset[1], 1.7, 0, 2 * Math.PI); ctx.arc(4 + offset[0], -3 + offset[1], 1.7, 0, 2 * Math.PI); ctx.fill();
+function drawBear(bear) {
+  const cuddly = game.elapsed < game.powerUntil && game.elapsed >= bear.releaseAt;
+  const walking = !reducedMotion && game.state === 'playing' && bear.moving;
+  const step = walking ? Math.sin(paintTime * .009 + bear.index * 2) * .8 : 0;
+  const fur = cuddly ? '#f0dce5' : ['#efcfbf', '#e2d5ba', '#ded0e7', '#e4c49d'][bear.index % 4];
+  const edge = cuddly ? '#be92ab' : '#b6937e';
+  ctx.save(); ctx.translate(bear.x * TILE, bear.y * TILE + Math.abs(step) * .5);
+  ctx.lineWidth = .85;
+  const oval = (x, y, rx, ry, fill = fur, stroke = edge) => {
+    ctx.beginPath(); ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+    ctx.fillStyle = fill; ctx.fill();
+    if (stroke) { ctx.strokeStyle = stroke; ctx.stroke(); }
+  };
+  if (cuddly) oval(0, 0, 16, 16, '#edb6d12b', '#d6a0bb66');
+  // Rounded paws, tummy and ears give each moving friend a teddy silhouette.
+  oval(0, 7.5, 8.5, 8);
+  oval(-9, 6.5, 3.5, 5); oval(9, 6.5, 3.5, 5);
+  oval(0, 8.5, 5.3, 5.5, '#fff1e0', null);
+  oval(-5, 13.5 + step, 4.6, 3); oval(5, 13.5 - step, 4.6, 3);
+  oval(-5, 13.5 + step, 2.4, 1.5, '#fff1e0', null);
+  oval(5, 13.5 - step, 2.4, 1.5, '#fff1e0', null);
+  oval(-8, -10.8, 4.8, 4.8); oval(8, -10.8, 4.8, 4.8);
+  oval(-8, -10.8, 2.6, 2.6, '#eebdb9', null);
+  oval(8, -10.8, 2.6, 2.6, '#eebdb9', null);
+  oval(0, -3.5, 11.6, 10);
+  oval(0, .3, 6.5, 4.7, '#fff1e0', null);
+  oval(-8, -.4, 2.8, 1.6, '#e8a5ae99', null);
+  oval(8, -.4, 2.8, 1.6, '#e8a5ae99', null);
+  if (cuddly) {
+    heart(ctx, -4.6, -4.5, 3.8, '#b47798');
+    heart(ctx, 4.6, -4.5, 3.8, '#b47798');
+  } else {
+    const [dx, dy] = { left: [-.7, 0], right: [.7, 0], up: [0, -.6], down: [0, .6], none: [0, 0] }[bear.dir];
+    oval(-4.6, -5, 2.3, 2.7, '#fffaf0', null);
+    oval(4.6, -5, 2.3, 2.7, '#fffaf0', null);
+    oval(-4.6 + dx, -5 + dy, 1.3, 1.6, '#735565', null);
+    oval(4.6 + dx, -5 + dy, 1.3, 1.6, '#735565', null);
   }
-  ctx.beginPath(); ctx.arc(0, 3.3, 2.5, .15, Math.PI - .15); ctx.strokeStyle = '#826181'; ctx.lineWidth = .85; ctx.stroke(); ctx.restore();
+  oval(0, -.7, 2, 1.4, '#8a665e', null);
+  ctx.beginPath(); ctx.moveTo(0, .3); ctx.lineTo(0, 1.8);
+  ctx.moveTo(-3, 1.5); ctx.quadraticCurveTo(-1.5, 4, 0, 1.8);
+  ctx.quadraticCurveTo(1.5, 4, 3, 1.5); ctx.strokeStyle = '#8a665e'; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0, 6.2); ctx.lineTo(-5, 4.2);
+  ctx.quadraticCurveTo(-6, 10, 0, 8); ctx.lineTo(5, 4.2);
+  ctx.quadraticCurveTo(6, 10, 0, 8); ctx.closePath();
+  ctx.fillStyle = bear.color; ctx.fill(); ctx.strokeStyle = edge; ctx.stroke();
+  oval(0, 7, 1.5, 1.5, '#fff1e8', edge);
+  ctx.restore();
 }
 function sprinkle(x, y, color, amount = 8) {
   if (reducedMotion) return;
@@ -348,7 +379,7 @@ function draw(dt) {
       ctx.fillText(world.fruit, x, y + .5);
     }
   }
-  for (const ghost of game.ghosts) drawGhost(ghost);
+  for (const bear of game.ghosts) drawBear(bear);
   drawPlayer();
   for (const p of particles) {
     p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 45 * dt;
@@ -385,7 +416,7 @@ function handleEvents() {
       if (event.kind !== 'dot') {
         sprinkle((event.col + .5) * TILE, (event.row + .5) * TILE, '#d59ab8', 18);
         floaters.push({ x: (event.col + .5) * TILE, y: (event.row + .5) * TILE - 12, text: `+${event.points}`, life: 1.1 });
-        if (event.kind === 'power') { tone(660, .15, .035); tone(880, .16, .025, .13); toast('לב גדול! עכשיו אפשר לחבק את הרוחות ♡', true); }
+        if (event.kind === 'power') { tone(660, .15, .035); tone(880, .16, .025, .13); toast('לב גדול! עכשיו אפשר לחבק את הדובונים ♡', true); }
         else { tone(1047, .12, .03); toast('ביס בונוס! +150 נקודות 🍓', true); }
       } else {
         sprinkle((event.col + .5) * TILE, (event.row + .5) * TILE, '#dbb3ce', 3);
