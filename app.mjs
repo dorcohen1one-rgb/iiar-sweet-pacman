@@ -5,6 +5,12 @@ const canvas = $('game');
 const ctx = canvas.getContext('2d');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const number = new Intl.NumberFormat('he-IL');
+const portrait = new Image();
+let portraitReady = false;
+portrait.onload = () => { portraitReady = true; };
+portrait.src = './iyar-photo.png';
+// Keep her real photo upright and crop away the screenshot's surrounding UI.
+const portraitCrop = { x: 204, y: 30, size: 192 };
 let mode = readSaved('ayir-mode', 'cozy');
 if (!['cozy', 'classic'].includes(mode)) mode = 'cozy';
 let game = new SweetGame({ mode });
@@ -45,23 +51,23 @@ const biteWords = [
   'אייר, יש בך משהו יפה ♡', 'אייר, חיבוק קטן בשבילך ♡',
   'אייר, תישארי בדיוק את ♡', 'אייר, את פותחת את הלב ♡'
 ];
-let bites = 0, heartIndex = 0, lastHeartMessageAt = -Infinity;
+let biteWordIndex = 0, heartIndex = 0;
+let lastBiteWordsAt = -Infinity, lastHeartMessageAt = 0;
 
 function sweetWords(event) {
-  bites++;
-  const words = biteWords[(bites - 1) % biteWords.length];
-  $('bite-word').textContent = words;
-  // A short compliment accompanies every bite. The longer note stays readable
-  // while several candies are collected quickly instead of changing five times a second.
-  if (paintTime - lastHeartMessageAt >= 3600) {
-    heartIndex = bites === 1 ? 1 : (heartIndex + 1) % heartMessages.length;
+  // Use playing time so a pause also gives her time to enjoy the same words.
+  if (game.elapsed - lastHeartMessageAt >= 9) {
+    heartIndex = (heartIndex + 1) % heartMessages.length;
     $('heart-message').textContent = heartMessages[heartIndex];
-    lastHeartMessageAt = paintTime;
+    lastHeartMessageAt = game.elapsed;
   }
+  if (game.elapsed - lastBiteWordsAt < 6) return;
+  const words = biteWords[biteWordIndex++ % biteWords.length];
+  $('bite-word').textContent = words;
+  lastBiteWordsAt = game.elapsed;
   if (!reducedMotion) {
-    for (const f of floaters) if (f.kind === 'compliment') f.life = Math.min(f.life, .16);
     floaters.push({ kind: 'compliment', x: (event.col + .5) * TILE,
-      y: (event.row + .5) * TILE - 26, text: words, life: 1.3 });
+      y: (event.row + .5) * TILE - 28, text: words, life: 3.6 });
   }
 }
 
@@ -118,7 +124,8 @@ function reset(nextMode = mode) {
   game = new SweetGame({ mode });
   particles = []; floaters = []; cacheLevel = -1; hudSnapshot = '';
   previousState = 'ready'; $('board-toast').classList.remove('show');
-  bites = 0; heartIndex = 0; lastHeartMessageAt = -Infinity;
+  biteWordIndex = 0; heartIndex = 0;
+  lastBiteWordsAt = -Infinity; lastHeartMessageAt = 0;
   $('heart-message').textContent = heartMessages[0];
   $('bite-word').textContent = 'כל ביס כאן הוא בשבילך ♡';
   confirmationWasPlaying = false;
@@ -252,6 +259,23 @@ function drawPlayer() {
     ctx.strokeStyle = '#d39ac888'; ctx.lineWidth = 1; ctx.stroke();
   }
   const facing = { right: 0, down: Math.PI / 2, left: Math.PI, up: -Math.PI / 2 }[p.facing];
+  if (portraitReady) {
+    // Only the golden outer edge chomps; her smile stays whole and upright.
+    const opening = p.moving && game.state === 'playing' && !reducedMotion
+      ? .08 + .08 * (.5 + .5 * Math.sin(paintTime * .012)) : .1;
+    ctx.save(); ctx.rotate(facing);
+    ctx.beginPath(); ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 15.5, opening * Math.PI, (2 - opening) * Math.PI);
+    ctx.closePath(); ctx.fillStyle = '#ffdb7d'; ctx.fill();
+    ctx.strokeStyle = '#dba953'; ctx.lineWidth = .8; ctx.stroke();
+    ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.arc(0, 0, 12.5, 0, Math.PI * 2); ctx.clip();
+    ctx.drawImage(portrait, portraitCrop.x, portraitCrop.y, portraitCrop.size, portraitCrop.size,
+      -12.5, -12.5, 25, 25);
+    ctx.restore();
+    ctx.beginPath(); ctx.arc(0, 0, 12.5, 0, Math.PI * 2);
+    ctx.strokeStyle = '#f1c8d7'; ctx.lineWidth = 1; ctx.stroke();
+  } else {
   const mouth = p.moving && game.state === 'playing' && !reducedMotion ? .16 + .28 * (.5 + .5 * Math.sin(paintTime * .021)) : .23;
   ctx.save(); ctx.rotate(facing);
   ctx.beginPath(); ctx.moveTo(0, 0); ctx.arc(0, 0, 13, mouth * Math.PI, (2 - mouth) * Math.PI); ctx.closePath();
@@ -260,6 +284,7 @@ function drawPlayer() {
   ctx.beginPath(); ctx.ellipse(2, -6.5, 1.8, 2.5, 0, 0, 2 * Math.PI); ctx.fillStyle = '#645071'; ctx.fill();
   ctx.beginPath(); ctx.moveTo(2.5, -9); ctx.lineTo(3.5, -11); ctx.strokeStyle = '#645071'; ctx.lineWidth = 1; ctx.stroke();
   ctx.restore();
+  }
   ctx.beginPath(); ctx.moveTo(-5, -13); ctx.lineTo(-14, -19); ctx.quadraticCurveTo(-15, -8, -5, -10);
   ctx.lineTo(3, -19); ctx.quadraticCurveTo(7, -8, -5, -10); ctx.fillStyle = '#e8a2bd'; ctx.fill(); ctx.strokeStyle = '#be7c9b'; ctx.lineWidth = .8; ctx.stroke();
   ctx.beginPath(); ctx.arc(-5, -12, 2.7, 0, Math.PI * 2); ctx.fillStyle = '#f8cfdd'; ctx.fill(); ctx.stroke();
@@ -323,8 +348,11 @@ function draw(dt) {
   ctx.globalAlpha = 1; particles = particles.filter(p => p.life > 0);
   ctx.font = 'bold 15px Arial'; ctx.textAlign = 'center';
   for (const f of floaters) {
-    f.life -= dt; f.y -= (f.kind === 'compliment' ? 12 : 23) * dt;
-    ctx.save(); ctx.globalAlpha = Math.min(1, Math.max(0, f.life / .25));
+    f.life -= dt; f.y -= (f.kind === 'compliment' ? 5 : 23) * dt;
+    ctx.save();
+    ctx.globalAlpha = f.kind === 'compliment'
+      ? Math.max(0, Math.min(1, (3.6 - f.life) / .35, f.life / .65))
+      : Math.min(1, Math.max(0, f.life / .25));
     if (f.kind === 'compliment') {
       ctx.font = 'bold 18px Arial'; ctx.direction = 'rtl'; ctx.textBaseline = 'middle';
       const width = ctx.measureText(f.text).width + 22;
