@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#faf7ef">
+  <meta name="description" content="אייר, בנינו לך עולם קטן ומתוק. פקמנית עם פפיון, רוחות חמודות ושלושה עולמות של ממתקים. משחקים במחשב ובטלפון.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="iiar / אייר · ביס קטן של אושר">
+  <meta property="og:description" content="עולם קטן ומתוק שנוצר במיוחד לאייר. לחצי, שחקי, וחייכי קצת ♡">
+  <meta property="og:image" content="https://dorcohen1one-rgb.github.io/iiar-sweet-pacman/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="פקמנית עם פפיון ורוד והכיתוב: אייר, קחי ביס קטן של אושר.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="iiar / אייר · ביס קטן של אושר">
+  <meta name="twitter:image" content="https://dorcohen1one-rgb.github.io/iiar-sweet-pacman/og.png">
+  <title>iiar / אייר · ביס קטן של אושר</title>
+  <link rel="icon" type="image/svg+xml" href="./favicon.svg">
+  <link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="הארקייד של אייר, עמוד הבית">
+        <img src="./favicon.svg" width="42" height="42" alt="">
+        <span>הארקייד של אייר<small lang="en" dir="ltr">iiar's little arcade</small></span>
+      </a>
+      <div class="top-actions">
+        <span class="made-for">נוצר במיוחד ל־<bdi>iiar</bdi> <span aria-hidden="true">♡</span></span>
+        <button class="icon-button" id="sound" type="button" aria-label="הפעלת צלילים" aria-pressed="false" title="צלילים"><span id="sound-icon" aria-hidden="true">♫</span><span class="sound-slash" aria-hidden="true"></span></button>
+        <button class="icon-button" id="share" type="button" aria-label="שיתוף המשחק" title="שיתוף המשחק"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V3m-5 5 5-5 5 5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg></button>
+      </div>
+    </header>
+
+    <section class="intro" aria-labelledby="title">
+      <div><div class="eyebrow"><span class="tiny-star" aria-hidden="true">✦</span> משחק קטן. חיוך גדול.</div>
+        <h1 id="title">אייר, קחי ביס קטן <span>של אושר.</span></h1>
+        <p>כמה ממתקים, כמה רוחות, ועולם שלם שנוצר בשבילך.</p>
+      </div>
+      <div class="intro-sticker" aria-hidden="true"><span>100%</span><span>מתיקות</span><svg viewBox="0 0 40 40"><path d="M20 32 7 19C-2 9 12-1 20 10c8-11 22-1 13 9Z"/></svg></div>
+    </section>
+
+    <main class="play-layout">
+      <section class="game-card" aria-label="משחק הפקמן של אייר">
+        <div class="game-card-header">
+          <span class="world-label"><i aria-hidden="true"></i><span id="world-name">גינת התותים</span></span>
+          <span id="lives" class="lives" aria-label="4 לבבות"><span aria-hidden="true">♥ ♥ ♥ ♥</span></span>
+        </div>
+        <div class="hud">
+          <div class="hud-stat"><span>הנקודות שלך</span><strong id="score">0</strong></div>
+          <div class="hud-stat"><span>השיא המתוק</span><strong id="best">0</strong></div>
+          <div class="hud-stat world-stat"><span>העולם שלך</span><strong><b id="level">1</b><small> / 3</small></strong></div>
+        </div>
+        <div class="board-wrap" id="board-wrap">
+          <canvas id="game" width="608" height="672" tabindex="0" role="img" aria-label="מבוך פקמן: אספי את כל הממתקים. אפשר לשחק עם חצים, כפתורי הכיוון או החלקה על המסך.">המשחק דורש דפדפן עם תמיכה ב־Canvas.</canvas>
+          <div class="overlay" id="overlay">
+            <div class="overlay-card">
+              <div class="overlay-badge" id="overlay-badge">משלוח מיוחד לאייר ♡</div>
+              <img class="mascot" id="overlay-mascot" src="./mascot.svg" width="240" height="200" alt="פקמנית חייכנית עם פפיון ורוד">
+              <h2 id="overlay-title">היי אייר, מוכנה לביס?</h2>
+              <p id="overlay-text">אספי ממתקים, תני חיבוק לרוחות,<br>וגלִי מה מחכה לך בסוף.</p>
+              <button class="primary-button" id="start" type="button">יאללה, לשחק <span aria-hidden="true">←</span></button>
+              <span class="overlay-hint" id="overlay-hint">בלי לחץ. רק עוד קצת מתוק.</span>
+            </div>
+          </div>
+          <div class="power-banner" id="power-banner" hidden>♡ זמן לחיבוקים! <span id="power-time">9</span></div>
+          <div class="board-toast" id="board-toast" role="status" aria-live="polite"></div>
+        </div>
+        <div class="game-bottom">
+          <div class="bottom-buttons">
+            <button id="pause" class="secondary-button" type="button" disabled><span id="pause-icon" aria-hidden="true">Ⅱ</span><span id="pause-label">רגע קטן</span></button>
+            <button id="restart" class="text-button" type="button" aria-label="להתחיל משחק חדש">↻ <span>מהתחלה</span></button>
+          </div>
+          <span class="keyboard-hint"><kbd>↑</kbd><kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd><span>או WASD</span></span>
+        </div>
+        <div class="touch-controls" aria-label="שליטה בכיוון">
+          <div class="touch-copy"><strong>ביס ימינה?<br>ביס שמאלה?</strong><span>השתמשי בחצים או החליקי על המבוך.</span></div>
+          <div class="dpad" dir="ltr">
+            <button class="dir up" data-dir="up" type="button" aria-label="למעלה">↑</button>
+            <button class="dir left" data-dir="left" type="button" aria-label="שמאלה">←</button>
+            <span class="dpad-center" aria-hidden="true">♡</span>
+            <button class="dir right" data-dir="right" type="button" aria-label="ימינה">→</button>
+            <button class="dir down" data-dir="down" type="button" aria-label="למטה">↓</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side-panel">
+        <section class="note-card">
+          <span class="note-tape" aria-hidden="true"></span>
+          <div class="eyebrow">פתק קטן בשבילך</div>
+          <h2>אייר, העולם קצת<br>יותר חמוד איתך.</h2>
+          <p>אז בנינו לך אחד משלך.<br>עם פפיון, לבבות, והרבה<br>סיבות לחייך.</p>
+          <span class="note-heart" aria-hidden="true">♡</span>
+          <small>כל הממתקים כאן — שלך.</small>
+        </section>
+
+        <section class="journey-card" aria-labelledby="journey-title">
+          <div class="section-heading"><h2 id="journey-title">המסע המתוק שלך</h2><span aria-hidden="true">✧</span></div>
+          <ol class="worlds">
+            <li class="active" data-world="1"><span class="world-icon" aria-hidden="true">🍓</span><div><strong>גינת התותים</strong><span>מתחילים במשהו מתוק</span></div><span class="world-number" aria-hidden="true">01</span></li>
+            <li data-world="2"><span class="world-icon" aria-hidden="true">☁️</span><div><strong>ענן של סוכר</strong><span>עוד קצת, ואת בעננים</span></div><span class="world-number" aria-hidden="true">02</span></li>
+            <li data-world="3"><span class="world-icon" aria-hidden="true">✨</span><div><strong>מסיבת הכוכבים</strong><span>ההפתעה מחכה בסוף</span></div><span class="world-number" aria-hidden="true">03</span></li>
+          </ol>
+          <div class="progress-label"><span>ממתקים שאספת</span><span id="progress-text">0 מתוך 201</span></div>
+          <div class="progress-track" role="progressbar" id="progress" aria-label="התקדמות באיסוף הממתקים" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="progress-fill"></span></div>
+        </section>
+
+        <section class="how-card" aria-labelledby="how-title">
+          <h2 id="how-title">הוראות של מתיקות</h2>
+          <div class="how-row"><span class="how-icon candy-icon" aria-hidden="true">✦</span><p><strong>אספי את כל הממתקים</strong><span>כל ביס מקרב אותך לעולם הבא.</span></p></div>
+          <div class="how-row"><span class="how-icon heart-icon" aria-hidden="true">♥</span><p><strong>לב גדול, כוח קטן</strong><span>אספי לב, ואז חבקי את הרוחות!</span></p></div>
+          <div class="how-row"><span class="how-icon ghost-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M7 33V18a13 13 0 0 1 26 0v15l-5-4-4 4-4-4-4 4-4-4z"/><circle cx="16" cy="18" r="2"/><circle cx="25" cy="18" r="2"/></svg></span><p><strong>רוחות עם כוונות טובות</strong><span>אבל בלי לב — עדיף לתת להן מרחב.</span></p></div>
+          <div class="mode-picker" role="group" aria-label="בחירת מצב משחק">
+            <button class="mode selected" data-mode="cozy" type="button" aria-pressed="true">☁ מצב רגוע</button>
+            <button class="mode" data-mode="classic" type="button" aria-pressed="false">✦ קצת אתגר</button>
+          </div>
+          <p class="mode-note" id="mode-note">רוחות איטיות יותר, לב נוסף, בלי שעון.</p>
+        </section>
+        <div class="side-signature" aria-hidden="true">a little game, made with a lot of ♡</div>
+      </aside>
+    </main>
+    <footer><span>נוצר במיוחד בשביל אייר <b aria-hidden="true">♡</b></span><span>מומלץ עם חיוך. ואולי משהו מתוק.</span></footer>
+  </div>
+
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <div class="dialog-content"><span class="dialog-heart" aria-hidden="true">♡</span><h2 id="confirm-title">מתחילים ביס חדש?</h2><p>הניקוד של המשחק הנוכחי יתאפס.<br>השיא שלך נשאר איתך.</p><div class="dialog-actions"><button id="confirm-yes" class="primary-button" type="button">כן, מהתחלה</button><button id="confirm-no" class="secondary-button" type="button">ממשיכים לשחק</button></div></div>
+  </dialog>
+  <dialog id="gift-dialog" aria-labelledby="gift-title">
+    <div class="dialog-content gift-content"><span class="gift-stars" aria-hidden="true">✧ ♡ ✧</span><div class="eyebrow">ההפתעה שלך</div><h2 id="gift-title">אייר, את הביס<br>הכי מתוק כאן.</h2><p>סיימת שלושה עולמות,<br>אבל את החיוך שלך אפשר לקחת לכל מקום.<br><strong>שיהיה לך יום מלא בדברים קטנים שעושים טוב.</strong></p><img src="./mascot.svg" width="160" height="133" alt=""><button id="gift-close" class="primary-button" type="button">עוד סיבוב של אושר ♡</button></div>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript><p class="noscript">צריך להפעיל JavaScript בדפדפן כדי לשחק.</p></noscript>
+</body>
+</html>
