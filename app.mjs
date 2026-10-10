@@ -406,7 +406,7 @@ $('sound').addEventListener('click', () => {
   if (soundOn) { unlockAudio(); tone(784, .16, .035); }
 });
 $('share').addEventListener('click', async () => {
-  const details = { title: 'iiar / אייר · ביס קטן של אושר', text: 'אייר, עולם קטן ומתוק שנוצר במיוחד בשבילך ♡', url: location.href };
+  const details = { title: 'iyar / אייר · ביס קטן של אושר', text: 'אייר, עולם קטן ומתוק שנוצר במיוחד בשבילך ♡', url: location.href };
   try {
     if (navigator.share) await navigator.share(details);
     else { await navigator.clipboard.writeText(details.url); toast('הקישור הועתק. עכשיו אפשר לשלוח חיוך ♡'); }
