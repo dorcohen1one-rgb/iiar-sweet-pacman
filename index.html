@@ -17,8 +17,8 @@
   <meta name="twitter:image" content="https://dorcohen1one-rgb.github.io/iiar-sweet-pacman/og.png">
   <title>iiar / אייר · ביס קטן של אושר</title>
   <link rel="icon" type="image/svg+xml" href="./favicon.svg">
-  <link rel="stylesheet" href="./style.css">
-  <script type="module" src="./app.mjs"></script>
+  <link rel="stylesheet" href="./style.css?v=heart-notes-1">
+  <script type="module" src="./app.mjs?v=heart-notes-1"></script>
 </head>
 <body>
   <div class="page">
@@ -53,6 +53,10 @@
           <div class="hud-stat"><span>השיא המתוק</span><strong id="best">0</strong></div>
           <div class="hud-stat world-stat"><span>העולם שלך</span><strong><b id="level">1</b><small> / 3</small></strong></div>
         </div>
+        <section class="bite-note" aria-label="מילים מהלב לאייר">
+          <div class="bite-note-heading"><span><span class="bite-note-heart" aria-hidden="true">♡</span> ביס קטן, מילה מהלב</span><span id="bite-word" aria-hidden="true">כל ביס כאן הוא בשבילך ♡</span></div>
+          <p id="heart-message" role="status" aria-live="polite" aria-atomic="true">אייר, כל העולם הקטן הזה נבנה בשביל חיוך אחד שלך.</p>
+        </section>
         <div class="board-wrap" id="board-wrap">
           <canvas id="game" width="608" height="672" tabindex="0" role="img" aria-label="מבוך פקמן: אספי את כל הממתקים. אפשר לשחק עם חצים, כפתורי הכיוון או החלקה על המסך.">המשחק דורש דפדפן עם תמיכה ב־Canvas.</canvas>
           <div class="overlay" id="overlay">
@@ -60,7 +64,7 @@
               <div class="overlay-badge" id="overlay-badge">משלוח מיוחד לאייר ♡</div>
               <img class="mascot" id="overlay-mascot" src="./mascot.svg" width="240" height="200" alt="פקמנית חייכנית עם פפיון ורוד">
               <h2 id="overlay-title">היי אייר, מוכנה לביס?</h2>
-              <p id="overlay-text">אספי ממתקים, תני חיבוק לרוחות,<br>וגלִי מה מחכה לך בסוף.</p>
+              <p id="overlay-text">אספי ממתקים, גלי מילים מהלב,<br>ותני חיבוק קטן לרוחות.</p>
               <button class="primary-button" id="start" type="button">יאללה, לשחק <span aria-hidden="true">←</span></button>
               <span class="overlay-hint" id="overlay-hint">בלי לחץ. רק עוד קצת מתוק.</span>
             </div>
@@ -110,7 +114,7 @@
 
         <section class="how-card" aria-labelledby="how-title">
           <h2 id="how-title">הוראות של מתיקות</h2>
-          <div class="how-row"><span class="how-icon candy-icon" aria-hidden="true">✦</span><p><strong>אספי את כל הממתקים</strong><span>כל ביס מקרב אותך לעולם הבא.</span></p></div>
+          <div class="how-row"><span class="how-icon candy-icon" aria-hidden="true">✦</span><p><strong>בכל ביס, משהו טוב בשבילך</strong><span>ממתק קטן ומילה טובה ישר מהלב.</span></p></div>
           <div class="how-row"><span class="how-icon heart-icon" aria-hidden="true">♥</span><p><strong>לב גדול, כוח קטן</strong><span>אספי לב, ואז חבקי את הרוחות!</span></p></div>
           <div class="how-row"><span class="how-icon ghost-icon" aria-hidden="true"><svg viewBox="0 0 40 40"><path d="M7 33V18a13 13 0 0 1 26 0v15l-5-4-4 4-4-4-4 4-4-4z"/><circle cx="16" cy="18" r="2"/><circle cx="25" cy="18" r="2"/></svg></span><p><strong>רוחות עם כוונות טובות</strong><span>אבל בלי לב — עדיף לתת להן מרחב.</span></p></div>
           <div class="mode-picker" role="group" aria-label="בחירת מצב משחק">

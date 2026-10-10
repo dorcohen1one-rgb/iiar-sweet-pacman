@@ -16,6 +16,54 @@ let boardCache, cacheLevel = -1, hudSnapshot = '';
 let overlayAction = 'start', pendingReset = null, confirmationWasPlaying = false;
 let previousState = game.state;
 let boardToastTimer, toastTimer;
+const heartMessages = [
+  'אייר, כל העולם הקטן הזה נבנה בשביל חיוך אחד שלך.',
+  'אייר, יש בך אור שעושה טוב גם בלי מילים.',
+  'יש אנשים שפשוט נעים ללב כשהם כאן. את אחת מהם, אייר.',
+  'איזה מזל שיש בעולם אותך, אייר.',
+  'אייר, החיוך שלך יכול להפוך יום רגיל ליום שרוצים לזכור.',
+  'הלוואי שהיום יחזיר לך קצת מכל הטוב שאת מביאה איתך.',
+  'אייר, יש בך משהו קטן וגדול שמרגיש כמו בית.',
+  'בין כל הממתקים כאן, הדבר הכי מתוק הוא שאת משחקת.',
+  'אייר, מגיעים לך רגעים קטנים שממלאים את הלב.',
+  'לפעמים כל מה שצריך בשביל חיוך זה לדעת שאת כאן.',
+  'אייר, הלב שלך הוא משהו יפה ששווה לשמור עליו.',
+  'גם אחרי שהמשחק נגמר, המילים הטובות כאן נשארות בשבילך.',
+  'אייר, שתמיד יהיה לך מקום שבו אפשר פשוט להיות את.',
+  'יש בך עדינות שהופכת את העולם לקצת יותר נעים.',
+  'אייר, אפילו הרוחות כאן קצת מתאהבות בחיוך שלך.',
+  'את לא צריכה לעשות משהו מיוחד כדי להיות חשובה, אייר.',
+  'הלוואי שכל ביס קטן כאן יזכיר לך כמה טוב שאת בעולם.',
+  'אייר, את ראויה ליום שירגיש כמו חיבוק.',
+  'יש חיוכים שנשארים בלב הרבה אחרי שרואים אותם. כמו שלך.',
+  'אייר, עוד ביס קטן ועוד סיבה לחייך. החיוך הזה מגיע לך.'
+];
+const biteWords = [
+  'אייר, את אור ♡', 'אייר, טוב שאת כאן ♡', 'אייר, את קסם ✨',
+  'אייר, את עושה טוב ♡', 'אייר, איזה לב יש לך ♡', 'אייר, את מתוקה 🍓',
+  'אייר, איזה מזל שיש אותך ♡', 'אייר, מגיע לך חיוך ♡',
+  'אייר, יש בך משהו יפה ♡', 'אייר, חיבוק קטן בשבילך ♡',
+  'אייר, תישארי בדיוק את ♡', 'אייר, את פותחת את הלב ♡'
+];
+let bites = 0, heartIndex = 0, lastHeartMessageAt = -Infinity;
+
+function sweetWords(event) {
+  bites++;
+  const words = biteWords[(bites - 1) % biteWords.length];
+  $('bite-word').textContent = words;
+  // A short compliment accompanies every bite. The longer note stays readable
+  // while several candies are collected quickly instead of changing five times a second.
+  if (paintTime - lastHeartMessageAt >= 3600) {
+    heartIndex = bites === 1 ? 1 : (heartIndex + 1) % heartMessages.length;
+    $('heart-message').textContent = heartMessages[heartIndex];
+    lastHeartMessageAt = paintTime;
+  }
+  if (!reducedMotion) {
+    for (const f of floaters) if (f.kind === 'compliment') f.life = Math.min(f.life, .16);
+    floaters.push({ kind: 'compliment', x: (event.col + .5) * TILE,
+      y: (event.row + .5) * TILE - 26, text: words, life: 1.3 });
+  }
+}
 
 function readSaved(name, fallback) {
   try { return localStorage.getItem(name) ?? fallback; } catch { return fallback; }
@@ -70,6 +118,9 @@ function reset(nextMode = mode) {
   game = new SweetGame({ mode });
   particles = []; floaters = []; cacheLevel = -1; hudSnapshot = '';
   previousState = 'ready'; $('board-toast').classList.remove('show');
+  bites = 0; heartIndex = 0; lastHeartMessageAt = -Infinity;
+  $('heart-message').textContent = heartMessages[0];
+  $('bite-word').textContent = 'כל ביס כאן הוא בשבילך ♡';
   confirmationWasPlaying = false;
   clearTimeout(boardToastTimer);
   syncMode(); updateHud(); showState('ready');
@@ -88,7 +139,7 @@ function togglePause() {
 function hideOverlay() { $('overlay').hidden = true; }
 function showState(state) {
   const settings = {
-    ready: ['משלוח מיוחד לאייר ♡', 'היי אייר, מוכנה לביס?', 'אספי ממתקים, תני חיבוק לרוחות,\nוגלִי מה מחכה לך בסוף.', 'יאללה, לשחק', 'בלי לחץ. רק עוד קצת מתוק.', 'start'],
+    ready: ['משלוח מיוחד לאייר ♡', 'היי אייר, מוכנה לביס?', 'אספי ממתקים, גלי מילים מהלב,\nותני חיבוק קטן לרוחות.', 'יאללה, לשחק', 'בלי לחץ. רק עוד קצת מתוק.', 'start'],
     paused: ['הפסקה מתוקה ☁', 'גם לממתקים מגיע רגע.', 'קחי נשימה, אייר.\nהעולם הקטן שלך מחכה לך בדיוק כאן.', 'ממשיכים לביס הבא', 'אפשר גם ללחוץ על מקש רווח.', 'resume'],
     levelup: ['עוד עולם בכיס שלך ✨', 'אייר, את עושה כאן קסמים!', `אספת את כל הממתקים.\n${WORLDS[game.level]?.name ?? ''} כבר מחכה לך.`, 'לעולם הבא', `בונוס לבבות: +${game.lives * 100} נקודות`, 'next'],
     over: ['כל ביס הוא התחלה ♡', 'עוד סיבוב קטן?', `אספת ${number.format(game.score)} נקודות של מתיקות.\nבפעם הבאה יש עוד ממתקים לגלות.`, 'יאללה, עוד פעם', 'השיא שלך נשמר בדפדפן הזה.', 'again'],
@@ -272,14 +323,27 @@ function draw(dt) {
   ctx.globalAlpha = 1; particles = particles.filter(p => p.life > 0);
   ctx.font = 'bold 15px Arial'; ctx.textAlign = 'center';
   for (const f of floaters) {
-    f.life -= dt; f.y -= 23 * dt; ctx.globalAlpha = Math.max(0, f.life);
-    ctx.fillStyle = '#9b718c'; ctx.fillText(f.text, f.x, f.y);
+    f.life -= dt; f.y -= (f.kind === 'compliment' ? 12 : 23) * dt;
+    ctx.save(); ctx.globalAlpha = Math.min(1, Math.max(0, f.life / .25));
+    if (f.kind === 'compliment') {
+      ctx.font = 'bold 18px Arial'; ctx.direction = 'rtl'; ctx.textBaseline = 'middle';
+      const width = ctx.measureText(f.text).width + 22;
+      const x = Math.max(width / 2 + 7, Math.min(WIDTH - width / 2 - 7, f.x));
+      const y = Math.max(23, f.y);
+      ctx.lineWidth = 1;
+      round(ctx, x - width / 2, y - 15, width, 30, 12, '#fff8f9f2', '#e5bbd0');
+      ctx.fillStyle = '#b77596'; ctx.fillText(f.text, x, y + 1);
+    } else {
+      ctx.fillStyle = '#9b718c'; ctx.fillText(f.text, f.x, f.y);
+    }
+    ctx.restore();
   }
   ctx.globalAlpha = 1; floaters = floaters.filter(f => f.life > 0);
 }
 function handleEvents() {
   for (const event of game.takeEvents()) {
     if (event.type === 'collect') {
+      sweetWords(event);
       if (event.kind !== 'dot') {
         sprinkle((event.col + .5) * TILE, (event.row + .5) * TILE, '#d59ab8', 18);
         floaters.push({ x: (event.col + .5) * TILE, y: (event.row + .5) * TILE - 12, text: `+${event.points}`, life: 1.1 });
