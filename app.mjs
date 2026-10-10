@@ -11,6 +11,9 @@ portrait.onload = () => { portraitReady = true; };
 portrait.src = './iyar-photo.png';
 // Keep her real photo upright and crop away the screenshot's surrounding UI.
 const portraitCrop = { x: 204, y: 30, size: 192 };
+const bearsPattern = new Image();
+bearsPattern.onload = () => { cacheLevel = -1; };
+bearsPattern.src = './bears-pattern.svg';
 let mode = readSaved('ayir-mode', 'cozy');
 if (!['cozy', 'classic'].includes(mode)) mode = 'cozy';
 let game = new SweetGame({ mode });
@@ -225,6 +228,13 @@ function makeBoard() {
   boardCache = document.createElement('canvas'); boardCache.width = WIDTH; boardCache.height = HEIGHT;
   const c = boardCache.getContext('2d'), world = WORLDS[game.level - 1];
   c.fillStyle = world.ground; c.fillRect(0, 0, WIDTH, HEIGHT);
+  if (bearsPattern.complete && bearsPattern.naturalWidth) {
+    const pattern = c.createPattern(bearsPattern, 'repeat');
+    if (pattern) {
+      c.save(); c.globalAlpha = .28; c.fillStyle = pattern;
+      c.fillRect(0, 0, WIDTH, HEIGHT); c.restore();
+    }
+  }
   c.fillStyle = '#87b79a12';
   for (let y = 16; y < HEIGHT; y += 16) for (let x = 16; x < WIDTH; x += 16) c.fillRect(x, y, 1, 1);
   c.lineWidth = 1.2;

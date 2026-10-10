@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="340" viewBox="0 0 360 340" fill="none">
+  <defs>
+    <g id="teddy" stroke="#ba947e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <ellipse cx="43" cy="94" rx="28" ry="31" fill="#ecd8bf"/>
+      <ellipse cx="43" cy="99" rx="17" ry="21" fill="#f9ecdb" stroke="none"/>
+      <ellipse cx="17" cy="88" rx="10" ry="18" transform="rotate(25 17 88)" fill="#ecd8bf"/>
+      <ellipse cx="69" cy="88" rx="10" ry="18" transform="rotate(-25 69 88)" fill="#ecd8bf"/>
+      <ellipse cx="23" cy="118" rx="17" ry="12" transform="rotate(-10 23 118)" fill="#e6ccb0"/>
+      <ellipse cx="63" cy="118" rx="17" ry="12" transform="rotate(10 63 118)" fill="#e6ccb0"/>
+      <ellipse cx="23" cy="118" rx="9" ry="6" fill="#f9ecdb" stroke="none"/>
+      <ellipse cx="63" cy="118" rx="9" ry="6" fill="#f9ecdb" stroke="none"/>
+      <circle cx="17" cy="23" r="15" fill="#ecd8bf"/>
+      <circle cx="69" cy="23" r="15" fill="#ecd8bf"/>
+      <circle cx="17" cy="23" r="8" fill="#eec8bb" stroke="none"/>
+      <circle cx="69" cy="23" r="8" fill="#eec8bb" stroke="none"/>
+      <ellipse cx="43" cy="45" rx="35" ry="31" fill="#ecd8bf"/>
+      <ellipse cx="43" cy="56" rx="19" ry="14" fill="#fff3e3" stroke="none"/>
+      <circle cx="29" cy="44" r="2.7" fill="#94715f" stroke="none"/>
+      <circle cx="57" cy="44" r="2.7" fill="#94715f" stroke="none"/>
+      <circle cx="28.4" cy="43.2" r=".8" fill="#fff9ed" stroke="none"/>
+      <circle cx="56.4" cy="43.2" r=".8" fill="#fff9ed" stroke="none"/>
+      <ellipse cx="21" cy="53" rx="6" ry="3.5" fill="#e9b4ad" stroke="none"/>
+      <ellipse cx="65" cy="53" rx="6" ry="3.5" fill="#e9b4ad" stroke="none"/>
+      <path d="M38 52Q43 48 48 52Q48 57 43 57Q38 57 38 52Z" fill="#94715f" stroke="none"/>
+      <path d="M43 57V60M36 60Q39 65 43 60Q47 65 50 60" stroke="#94715f" stroke-width="1.5"/>
+      <path d="M43 112V120" stroke="#c3a18a" stroke-dasharray="1.5 3"/>
+    </g>
+    <path id="heart" d="M0 7C-18-5-6-17 0-9C6-17 18-5 0 7Z"/>
+    <path id="sparkle" d="M0-6 1.6-1.6 6 0 1.6 1.6 0 6-1.6 1.6-6 0-1.6-1.6Z"/>
+  </defs>
+  <g opacity=".57">
+    <g transform="translate(37 26) rotate(-9 43 65)">
+      <use href="#teddy"/>
+      <use href="#heart" transform="translate(43 97) scale(.85)" fill="#dca1ad" stroke="#c98e9b" stroke-width="1.5"/>
+      <path d="M31 78 20 72Q16 86 32 83L44 72Q48 86 34 83Z" fill="#dca1ad" stroke="#c98e9b" stroke-width="1.5"/>
+      <circle cx="33" cy="80" r="3.5" fill="#f5ced8"/>
+    </g>
+    <g transform="translate(229 190) rotate(10 43 65)">
+      <use href="#teddy"/>
+      <use href="#heart" transform="translate(43 98) scale(.9)" fill="#b9cbb6" stroke="#9eb39a" stroke-width="1.5"/>
+      <path d="M32 78 20 72Q16 86 32 83L45 72Q49 86 34 83Z" fill="#b9cbb6" stroke="#9eb39a" stroke-width="1.5"/>
+      <circle cx="33" cy="80" r="3.5" fill="#e4eddc"/>
+    </g>
+    <g transform="translate(254 20) rotate(7 43 65) scale(.5)">
+      <use href="#teddy"/>
+      <use href="#heart" transform="translate(43 98)" fill="#cabce0"/>
+    </g>
+    <use href="#heart" transform="translate(180 74) rotate(13) scale(.65)" fill="#e8bac8"/>
+    <use href="#heart" transform="translate(79 245) rotate(-15) scale(.8)" fill="#e8bac8"/>
+    <use href="#heart" transform="translate(322 135) rotate(15) scale(.5)" fill="#d3c4e5"/>
+    <use href="#sparkle" transform="translate(187 214)" fill="#d7bd8e"/>
+    <use href="#sparkle" transform="translate(146 307) scale(.7)" fill="#c8b7dd"/>
+    <use href="#sparkle" transform="translate(27 191) scale(.7)" fill="#d7bd8e"/>
+    <circle cx="153" cy="158" r="2" fill="#d4bdd7"/>
+    <circle cx="335" cy="53" r="2" fill="#d4bdd7"/>
+    <circle cx="139" cy="30" r="1.5" fill="#d7bd8e"/>
+    <circle cx="28" cy="309" r="1.5" fill="#d7bd8e"/>
+  </g>
+</svg>
